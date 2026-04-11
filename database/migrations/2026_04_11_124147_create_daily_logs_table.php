@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('daily_logs', function (Blueprint $table) {
             $table->id();
-            //外部キー：どのユーザーの記録か(usersテーブルのidと紐づけ
+            //外部キー：どのユーザーの記録か(usersテーブルのidと紐づけ)
             $table->foreignId('user_id')
             ->constrained()
             ->cascadeOnDelete();
