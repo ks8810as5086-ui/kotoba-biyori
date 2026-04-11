@@ -18,8 +18,16 @@ return new class extends Migration
                 ->comment('紐づく日報のID')
                 ->constrained()
                 ->cascadeOnDelete();
+            //基本情報
             $table->time('event_time')->comment('発生時刻');
             $table->string('title')->comment('出来事のタイトル');
+            //状況、コンディション(追加項目)
+            $table->string('weather')->nullable()->comment('その時の天気'); 
+            $table->string('partner')->nullable()->comment('相手（友人、店員など）');
+            $table->string('place')->nullable()->comment('場所');
+            $table->string('trigger_word')->nullable()->comment('言いづらかった言葉');
+            $table->integer('anxiety_level')->nullable()->comment('予期不安の強さ');
+            //詳細、カスタマイズ
             $table->text('detail')->nullable()->comment('出来事の詳細');
             $table->string('icon_path',2048)->nullable()->comment('アイコンのパス');//URL対策
             $table->timestamps();
