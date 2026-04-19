@@ -15,6 +15,12 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('daily_logs.index')" :active="request()->routeIs('daily_logs.*')">
+                        日報一覧
+                    </x-nav-link>
+                    <x-nav-link :href="route('daily_logs.create')" :active="request()->routeIs('daily_logs.create')">
+                        日報作成
+                    </x-nav-link>
                 </div>
             </div>
 
