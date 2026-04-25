@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\DailyLog;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['name', 'email', 'password'])]
 #[Hidden(['password', 'remember_token'])]
@@ -18,6 +19,13 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    /**
+ * リレーション：ユーザーはたくさんの日報を持っている
+ */
+public function dailyLogs(): HasMany
+{
+    return $this->hasMany(DailyLog::class);
+}
     /**
      * Get the attributes that should be cast.
      *
@@ -30,9 +38,5 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    //リレーション：ユーザーはたくさんの日報を持っている
-    public function dailyLogs(): \Illuminate\Database\Eloquent\Relations\HasMany
-    {
-        return $this->hasMany(DailyLog::class);
-    }
+
 }

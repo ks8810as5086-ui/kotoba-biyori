@@ -2,22 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User;
+use App\Models\DailyLog;
+use App\Http\Requests\DailyLogRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\validation\Rule;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class DailyLogController extends Controller
 {
+    use AuthorizesRequests;
+
     //日報一覧を表示する
     public function index(): View
 {
     // ログインしているユーザーの日報を、日付の降順で取得
-    /**@var App\Models\User $user */
+    /** @var \App\Models\User $user */
         $user = Auth::user();
+    
         $dailyLogs = $user->dailyLogs()->latest('date')->get();
-    return view('daily_logs.index',compact('dailyLogs'));
+    
+        return view('daily_logs.index', compact('dailyLogs'));
 }
     //日報入力画面を表示する
     public function create(): View
@@ -26,24 +34,29 @@ class DailyLogController extends Controller
         return view('daily_logs.create');
     }
     //日報を保存する
-    public function store(Request $request): RedirectResponse
+    public function store(DailyLogRequest $request): RedirectResponse
     {
-        //バリデーションルールを定義
-        $validated = $request->validate([
-            'date' => [
-                'required',
-                'date',
-                //同じユーザーが同じ日に複数の日報を作成できないようにするルール
-                Rule::unique('daily_logs')->where(fn ($query) => $query->where('user_id', Auth::id())),
-                ],
-            'mood_score' => 'required|integer|min:1|max:5',
-            'summary' => 'nullable|string|max:1000',
-        ]);
-        //日報を保存
-        /** @var User $user */
+       /** @var \App\Models\User $user */
         $user = Auth::user();
-        $user->dailyLogs()->create($validated);
-        //日報一覧ページにリダイレクト
-        return redirect()->route('daily_logs.index')->with('success', '日報が保存されました。');
+    
+        $user->dailyLogs()->create($request->validated());
+
+        return redirect()->route('daily_logs.index')->with('status', '日報が保存されました。');
+    }
+    public function edit(DailyLog $dailyLog){
+        //ポリシーのauthorizeメソッドを使用して、ユーザーが日報を編集する権限があるかを確認
+        $this->authorize('update', $dailyLog);
+        return view('daily_logs.edit', compact('dailyLog'));
+    }
+    public function update(DailyLogRequest $request,DailyLog $dailyLog){
+        $this->authorize('update', $dailyLog);
+        $validated = $request->validated();
+        $dailyLog->update($validated);
+        return redirect()->route('daily_logs.index')->with('status', '日報を更新しました!');
+    }
+    public function destroy(DailyLog $dailyLog){
+        $this->authorize('delete', $dailyLog);
+        $dailyLog->delete();
+        return redirect()->route('daily_logs.index')->with('status','日報を削除しました!');
     }
 }

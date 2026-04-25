@@ -22,6 +22,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/daily_logs', [DailyLogController::class, 'index'])->name('daily_logs.index');
     //日報保存のルート
     Route::post('/daily_logs', [DailyLogController::class, 'store'])->name('daily_logs.store');
+    //日報編集画面の表示ルート
+    Route::get('/daily_logs/{dailyLog}/edit',[DailyLogController::class,'edit'])->name('daily_logs.edit');
+    //日報更新のルート
+    Route::patch('/daily_logs/{dailyLog}',[DailyLogController::class,'update'])->name('daily_logs.update');
+    //日報削除のルート
+    Route::delete('/daily_logs/{dailyLog}',[DailyLogController::class,'destroy'])->name('daily_logs.destroy');
 
 });
 
