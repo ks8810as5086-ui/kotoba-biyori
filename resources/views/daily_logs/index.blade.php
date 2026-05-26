@@ -55,9 +55,7 @@
                                 </div>
 
                                 {{-- 本文（要約）：カード内で文字があふれないよう、適度な高さを保つ --}}
-                                <p class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed mb-6">
-                                    {{ $log->summary }}
-                                </p>
+                                <p class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed mb-6">{{ $log->summary }}</p>
                             </div>
 
                             {{-- フッター部分：アクションボタン --}}
