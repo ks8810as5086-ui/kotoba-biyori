@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('daily_logs', function (Blueprint $table) {
             $table->id();
-            //外部キー：どのユーザーの記録か(usersテーブルのidと紐づけ)
+            // 外部キー：どのユーザーの記録か(usersテーブルのidと紐づけ)
             $table->foreignId('user_id')
-            ->constrained()
-            ->cascadeOnDelete();
+                ->constrained()
+                ->cascadeOnDelete();
             $table->date('date')->comment('記録日(1日1件)');
             $table->unsignedTinyInteger('mood_score')->comment('気分スコア(1:低~5:高)');
             $table->text('summary')->nullable()->comment('その日の総括(ひとこと)');
             $table->timestamps();
-            $table->unique(['user_id','date']); //ユーザーごとに日付の重複を許さない(1日1件)
-            //$table->index(['user_id','date']); ユーザーIDと日付でインデックスを作成し、検索の高速化しようとしたが、unique制約があるため不要
+            $table->unique(['user_id', 'date']); // ユーザーごとに日付の重複を許さない(1日1件)
+            // $table->index(['user_id','date']); ユーザーIDと日付でインデックスを作成し、検索の高速化しようとしたが、unique制約があるため不要
         });
     }
 
