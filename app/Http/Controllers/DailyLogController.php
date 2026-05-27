@@ -21,7 +21,7 @@ class DailyLogController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $dailyLogs = $user->dailyLogs()->latest('date')->get();
+        $dailyLogs = $user->dailyLogs()->latest('date')->paginate(6);
 
         return view('daily_logs.index', compact('dailyLogs'));
     }
