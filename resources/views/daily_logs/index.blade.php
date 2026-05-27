@@ -16,7 +16,7 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
+<div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{-- アプリ全体の背景を少しグレーにし、カードを引き立たせるため、ここでの背景白（bg-white）と枠（shadow-sm）を外してグリッドを配置 --}}
             @if($dailyLogs->isEmpty())
@@ -88,6 +88,11 @@
 
                         </div>
                     @endforeach
+                </div>
+
+                {{--  ページネーション（日報データが存在するときだけ、カードの塊の下に表示） --}}
+                <div class="mt-8">
+                    {{ $dailyLogs->links() }}
                 </div>
             @endif
         </div>
