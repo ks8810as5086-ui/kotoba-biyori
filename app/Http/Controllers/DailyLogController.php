@@ -82,4 +82,27 @@ class DailyLogController extends Controller
 
         return redirect()->route('daily_logs.index')->with('status', '日報を削除しました!');
     }
+
+    // 日報のグラフを表示する
+    public function graph(): View
+    {
+    // 1. 直近30日分の日報を取得するクエリ
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+    $dailyLogs = $user->dailyLogs()
+        ->where('date', '>=', now()->subDays(30))
+        ->orderBy('date', 'asc')
+        ->get();
+
+    // 2. もしデータが空なら、早期リターン
+    if ($dailyLogs->isEmpty()) {
+        return view('daily_logs.graph', ['hasData' => false]);
+    }
+
+    // 3. グラフ用のデータ整形
+    $labels = $dailyLogs->pluck('date')->map(fn($date) => $date->format('m/d'));
+    $scores = $dailyLogs->pluck('mood_score');
+
+    return view('daily_logs.graph', compact('labels', 'scores'));
+    }
 }

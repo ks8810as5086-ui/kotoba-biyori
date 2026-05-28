@@ -15,6 +15,10 @@
                 class="flex-1 sm:flex-initial text-center px-4 py-2.5 bg-gradient-to-r from-pink-400 to-amber-400 hover:from-pink-500 hover:to-amber-500 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all duration-200 shadow-sm hover:shadow flex items-center justify-center gap-1.5">
                     <span>📝 今日のまとめを書く</span>
                 </a>
+                <a href="{{ route('daily_logs.graph') }}" 
+                class="flex-1 sm:flex-initial text-center px-4 py-2.5 bg-white text-gray-600 hover:bg-gray-50 font-semibold text-xs uppercase tracking-widest rounded-xl border border-gray-200 transition ease-in-out duration-150 flex items-center justify-center gap-1.5 shadow-sm">
+                    <span>📊 最近のグラフを見る</span>
+                </a>
             </div>
         </div>
     </x-slot>
