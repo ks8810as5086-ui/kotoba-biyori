@@ -16,18 +16,15 @@
         </div>
     </x-slot>
 
-<div class="py-12">
+    <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            {{-- アプリ全体の背景を少しグレーにし、カードを引き立たせるため、ここでの背景白（bg-white）と枠（shadow-sm）を外してグリッドを配置 --}}
             @if($dailyLogs->isEmpty())
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <p class="text-gray-500 text-center">まだ日報がありません。</p>
                 </div>
             @else
-                {{-- 【レスポンシブグリッド】スマホなら1列(grid-cols-1)、タブレットなら2列(sm:grid-cols-2)、PCなら3列(lg:grid-cols-3) --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($dailyLogs as $log)
-                        {{-- 【立体感のあるホワイトカード】 --}}
                         <div class="bg-white overflow-hidden shadow-md hover:shadow-xl rounded-xl p-6 flex flex-col justify-between transition-shadow duration-300 border border-gray-100">
                             
                             <div>
@@ -37,7 +34,6 @@
                                         {{ \Carbon\Carbon::parse($log->date)->locale('ja')->isoFormat('LL(ddd)') }}
                                     </span>
                                     
-                                    {{-- 【数字を可愛い絵文字バッジに変換】 --}}
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                         {{ $log->mood_score >= 4 ? 'bg-green-50 text-green-700 border border-green-200' : ($log->mood_score <= 2 ? 'bg-red-50 text-red-700 border border-red-200' : 'bg-yellow-50 text-yellow-700 border border-yellow-200') }}">
                                         <span class="mr-1 text-base">
@@ -54,8 +50,55 @@
                                     </span>
                                 </div>
 
-                                {{-- 本文（要約）：カード内で文字があふれないよう、適度な高さを保つ --}}
-                                <p class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed mb-6">{{ $log->summary }}</p>
+                                {{-- 本文（要約） --}}
+                                <p class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed mb-4">{{ $log->summary }}</p>
+
+                                {{-- 🌟 【新規追加】その日のリアルタイムイベントログのタイムライン表示 --}}
+                                @php
+                                    // 日報の日付（文字列形式）を取得して、対応するイベントログがあるか確認
+                                    $logDateStr = \Carbon\Carbon::parse($log->date)->toDateString();
+                                    $dayEvents = $eventLogs[$logDateStr] ?? null;
+                                @endphp
+
+                                @if ($dayEvents)
+                                    <div class="mt-4 pt-3 border-t border-dashed border-gray-100 space-y-2 mb-4">
+                                        <div class="text-xs font-semibold text-gray-400 tracking-wider uppercase mb-1">
+                                            ⏱️ その日の感覚メモ
+                                        </div>
+                                        @foreach ($dayEvents as $event)
+                                            <div class="bg-sky-50/60 hover:bg-sky-50 border border-sky-100/50 p-2.5 rounded-lg transition-colors duration-150">
+                                                <div class="flex items-center justify-between mb-1">
+                                                    <div class="flex items-center space-x-1.5">
+                                                        {{-- 発生時刻 --}}
+                                                        <span class="text-xs font-bold text-sky-700">
+                                                            {{ \Carbon\Carbon::parse($event->event_time)->format('H:i') }}
+                                                        </span>
+                                                        {{-- タイトル --}}
+                                                        <span class="text-xs font-bold text-gray-700 truncate max-w-[120px]">
+                                                            {{ $event->title ?? '(タイトルなし)' }}
+                                                        </span>
+                                                    </div>
+                                                    
+                                                    {{-- 不安度レベルのバッジ --}}
+                                                    @if($event->anxiety_level !== null)
+                                                        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-amber-50 text-amber-700 border border-amber-200">
+                                                            不安度: {{ $event->anxiety_level }}
+                                                        </span>
+                                                    @endif
+                                                </div>
+
+                                                {{-- メモの補足情報（相手や場所など、データがある場合だけ優しく表示） --}}
+                                                @if($event->partner || $event->place || $event->trigger_word)
+                                                    <div class="text-[11px] text-gray-500 space-x-1 truncate">
+                                                        @if($event->partner) <span>👤 {{ $event->partner }}</span> @endif
+                                                        @if($event->place) <span>📍 {{ $event->place }}</span> @endif
+                                                        @if($event->trigger_word) <span class="text-indigo-600 font-medium">💬「{{ $event->trigger_word }}」</span> @endif
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                @endif
                             </div>
 
                             {{-- フッター部分：アクションボタン --}}
@@ -90,7 +133,7 @@
                     @endforeach
                 </div>
 
-                {{--  ページネーション（日報データが存在するときだけ、カードの塊の下に表示） --}}
+                {{-- ページネーション --}}
                 <div class="mt-8">
                     {{ $dailyLogs->links() }}
                 </div>

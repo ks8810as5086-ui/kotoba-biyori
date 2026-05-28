@@ -32,9 +32,5 @@ class DailyLog extends Model
         return $this->belongsTo(User::class);
     }
 
-    // リレーション：イベントログ(この日報に関連するすべての出来事)
-    public function eventLogs()
-    {
-        return $this->hasMany(EventLog::class)->orderBy('event_time', 'asc');
-    }
+    // リレーション：イベントログ(この日報に関連するすべての出来事)を削除した。
 }
