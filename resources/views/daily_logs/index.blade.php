@@ -1,20 +1,31 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('日報一覧') }}
+                {{ __('ことばのグラデーション') }}
             </h2>
-            @if (session('status'))
-                <div class="mb-4 font-medium text-sm text-green-600 bg-green-100 border border-green-400 px-4 py-3 rounded">
-                    {{ session('status') }}
-                </div>
-            @endif
-            <a href="{{ route('daily_logs.create') }}"
-                class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                新規作成
-            </a>
+            
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <a href="{{ route('event_logs.create') }}" 
+                class="flex-1 sm:flex-initial text-center px-4 py-2.5 bg-white text-sky-600 hover:bg-sky-50 font-semibold text-xs uppercase tracking-widest rounded-xl border border-sky-200 transition ease-in-out duration-150 flex items-center justify-center gap-1.5 shadow-sm">
+                    <span>⏱️ 感覚メモを残す</span>
+                </a>
+
+                <a href="{{ route('daily_logs.create') }}"
+                class="flex-1 sm:flex-initial text-center px-4 py-2.5 bg-gradient-to-r from-pink-400 to-amber-400 hover:from-pink-500 hover:to-amber-500 text-white font-semibold text-xs uppercase tracking-widest rounded-xl transition-all duration-200 shadow-sm hover:shadow flex items-center justify-center gap-1.5">
+                    <span>📝 今日のまとめを書く</span>
+                </a>
+            </div>
         </div>
     </x-slot>
+
+    @if (session('status'))
+        <div class="max-w-7xl mx-auto mt-6 px-4 sm:px-6 lg:px-8">
+            <div class="font-medium text-sm text-green-600 bg-green-50 border border-green-200 px-4 py-3 rounded-xl shadow-sm flex items-center gap-2">
+                <span>✨</span> {{ session('status') }}
+            </div>
+        </div>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -53,9 +64,8 @@
                                 {{-- 本文（要約） --}}
                                 <p class="text-gray-600 text-sm whitespace-pre-wrap leading-relaxed mb-4">{{ $log->summary }}</p>
 
-                                {{-- 🌟 【新規追加】その日のリアルタイムイベントログのタイムライン表示 --}}
+                                {{-- その日のリアルタイムイベントログのタイムライン表示 --}}
                                 @php
-                                    // 日報の日付（文字列形式）を取得して、対応するイベントログがあるか確認
                                     $logDateStr = \Carbon\Carbon::parse($log->date)->toDateString();
                                     $dayEvents = $eventLogs[$logDateStr] ?? null;
                                 @endphp
@@ -68,11 +78,27 @@
                                         @foreach ($dayEvents as $event)
                                             <div class="bg-sky-50/60 hover:bg-sky-50 border border-sky-100/50 p-2.5 rounded-lg transition-colors duration-150">
                                                 <div class="flex items-center justify-between mb-1">
-                                                    <div class="flex items-center space-x-1.5">
+                                                    <div class="flex items-center space-x-2">
                                                         {{-- 発生時刻 --}}
-                                                        <span class="text-xs font-bold text-sky-700">
+                                                        <span class="text-xs font-bold text-sky-700 whitespace-nowrap">
                                                             {{ \Carbon\Carbon::parse($event->event_time)->format('H:i') }}
                                                         </span>
+
+                                                        {{-- 天気バッジ --}}
+                                                        @if(!empty($event->weather))
+                                                            <span class="inline-flex items-center px-1.5 py-0.5 rounded-md bg-white/80 text-[10px] text-gray-500 border border-gray-100/80 shadow-sm font-medium whitespace-nowrap">
+                                                    
+                                                                @switch($event->weather)
+                                                                    @case('晴れ') ☀️ @break
+                                                                    @case('くもり') ☁️ @break
+                                                                    @case('雨') ☔️ @break
+                                                                    @case('雪') ❄️ @break
+                                                                    @default 🌈
+                                                                @endswitch
+                                                                <span class="ms-0.5 text-gray-400">{{ $event->weather }}</span>
+                                                            </span>
+                                                        @endif
+
                                                         {{-- タイトル --}}
                                                         <span class="text-xs font-bold text-gray-700 truncate max-w-[120px]">
                                                             {{ $event->title ?? '(タイトルなし)' }}
@@ -87,7 +113,7 @@
                                                     @endif
                                                 </div>
 
-                                                {{-- メモの補足情報（相手や場所など、データがある場合だけ優しく表示） --}}
+                                                {{-- メモの補足情報 --}}
                                                 @if($event->partner || $event->place || $event->trigger_word)
                                                     <div class="text-[11px] text-gray-500 space-x-1 truncate">
                                                         @if($event->partner) <span>👤 {{ $event->partner }}</span> @endif
