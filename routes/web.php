@@ -35,7 +35,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/event_logs',[EventLogController::class,'store'])->name('event_logs.store');
     Route::get('/event_logs/{eventLog}/edit',[EventLogController::class,'edit'])->name('event_logs.edit');
     Route::patch('/event_logs/{eventLog}',[EventLogController::class,'update'])->name('event_logs.update');
-    Route::delete('/event_logs/{eventLog}',[EventLogController::class,'destroy'])->name('event_logs.destroy');  
+    Route::delete('/event_logs/{eventLog}',[EventLogController::class,'destroy'])->name('event_logs.destroy'); 
+    Route::get('/daily_logs/graph',[DailyLogController::class,'graph'])->name('daily_logs.graph'); 
 });
 
 require __DIR__.'/auth.php';
