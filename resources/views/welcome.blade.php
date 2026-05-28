@@ -51,7 +51,7 @@
     
             <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8 mt-2">
                 その日の出来事や心のうつりかわりを、<br class="hidden sm:inline">
-                あなただけの特別な「ことば」で紡ぐ日報アプリケーション。
+                あなただけの特別な「ことば」で紡ぐアプリ
             </p>
     
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
