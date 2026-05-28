@@ -26,6 +26,13 @@ class User extends Authenticatable
         return $this->hasMany(DailyLog::class);
     }
 
+        /**
+        * リレーション：ユーザーはたくさんの出来事を持っている
+        */
+    public function eventLogs(): HasMany
+    {
+        return $this->hasMany(EventLog::class);
+    }
     /**
      * Get the attributes that should be cast.
      *

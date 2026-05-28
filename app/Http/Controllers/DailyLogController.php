@@ -20,10 +20,24 @@ class DailyLogController extends Controller
         // ログインしているユーザーの日報を、日付の降順で取得
         /** @var User $user */
         $user = Auth::user();
-
+        //1.日報データをページネーション(6件)で取得
         $dailyLogs = $user->dailyLogs()->latest('date')->paginate(6);
 
-        return view('daily_logs.index', compact('dailyLogs'));
+        //2.表示する日報データの「日付」だけを配列として集める
+        $dates = $dailyLogs->pluck('date')->toArray();
+
+        // 3. その日付に含まれるイベントログだけを、データベースから一気に取得
+        $eventLogs = $user->eventLogs()
+            ->whereIn('event_date', $dates)
+            ->orderBy('event_time', 'asc')
+            ->get()
+            ->groupBy(function($item) {
+                // Carbon型であっても文字列型であっても、確実に「YYYY-MM-DD」の文字列にする
+                return \Carbon\Carbon::parse($item->event_date)->toDateString();
+            });
+
+        //4.日報データとイベントログをセットでビューに渡す
+        return view('daily_logs.index', compact('dailyLogs', 'eventLogs'));
     }
 
     // 日報入力画面を表示する

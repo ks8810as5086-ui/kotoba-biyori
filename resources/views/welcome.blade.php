@@ -24,36 +24,23 @@
 <body
     class="antialiased bg-gradient-to-br from-indigo-50 via-white to-pink-50 min-h-screen flex flex-col justify-between">
 
-    <header class="w-full max-w-7xl mx-auto px-6 py-4 flex justify-end">
-        @if (Route::has('login'))
-            <nav class="flex gap-4">
-                @auth
-                @else
-                    <a href="{{ route('login') }}"
-                        class="text-sm text-gray-400 hover:text-sky-500 transition-colors duration-200">ログイン</a>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}"
-                            class="text-sm text-gray-400 hover:text-sky-500 transition-colors duration-200">新規登録</a>
-                    @endif
-                @endauth
-            </nav>
-        @endif
-    </header>
+    {{-- 余計な余白とノイズを消すため、ヘッダーを完全に空（または削除）にします --}}
+    <div class="h-4"></div>
 
     <main class="flex-grow flex items-center justify-center px-4">
         <div
             class="max-w-xl w-full text-center bg-white/60 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-xl border border-white/40">
-    
+
             <div class="flex justify-center mb-2">
                 <img src="{{ asset('images/882958ea-3068-4ef9-bfd7-d9cd9c814ba3.png') }}" alt="ことば日和 ロゴ"
                     class="w-64 h-auto object-contain">
             </div>
-    
+
             <p class="text-base md:text-lg text-gray-600 leading-relaxed mb-8 mt-2">
                 その日の出来事や心のうつりかわりを、<br class="hidden sm:inline">
                 あなただけの特別な「ことば」で紡ぐアプリ
             </p>
-    
+
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 @auth
                     <a href="{{ route('daily_logs.index') }}"
@@ -78,7 +65,7 @@
                     </a>
                 @endauth
             </div>
-    
+
         </div>
     </main>
 

@@ -12,7 +12,8 @@ class EventLog extends Model
 
     // 一括代入可能なカラム
     protected $fillable = [
-        'daily_log_id',
+        'user_id',
+        'event_date',
         'event_time',
         'title',
         'weather',
@@ -29,14 +30,15 @@ class EventLog extends Model
     {
         return [
             // 時刻として扱う事で、cabonインスタンスとして操作できるようになる
+            'event_date' => 'date',// 'event_time' => 'time' だと、時間部分が切り捨てられてしまうため、datetimeでキャストしてから時間部分だけを扱う形にする
             'event_time' => 'datetime',
             'anxiety_level' => 'integer',
         ];
     }
 
-    // リレーション：このイベントが属する日報
-    public function dailyLog(): BelongsTo
+    // リレーション：このイベントが属するユーザー
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(DailyLog::class);
+        return $this->belongsTo(User::class);
     }
 }
