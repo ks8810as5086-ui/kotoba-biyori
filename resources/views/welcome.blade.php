@@ -41,10 +41,10 @@
                 あなただけの特別な「ことば」で紡ぐアプリ
             </p>
 
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-stretch max-w-md mx-auto">
                 @auth
                     <a href="{{ route('daily_logs.index') }}"
-                        class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-400 to-blue-400 hover:from-sky-500 hover:to-blue-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2">
+                        class="w-full px-8 py-4 bg-gradient-to-r from-sky-400 to-blue-400 hover:from-sky-500 hover:to-blue-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 whitespace-nowrap">
                         <span>マイページを開く</span>
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                             <path fill-rule="evenodd"
@@ -55,12 +55,13 @@
                 @else
                     @if (Route::has('register'))
                         <a href="{{ route('register') }}"
-                            class="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-sky-400 to-blue-400 hover:from-sky-500 hover:to-blue-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-200 text-center">
+                            class="w-full sm:w-1/2 px-4 py-4 bg-gradient-to-r from-sky-400 to-blue-400 hover:from-sky-500 hover:to-blue-500 text-white font-medium rounded-xl shadow-md hover:shadow-lg transition-all duration-200 flex items-center justify-center text-center whitespace-nowrap text-sm sm:text-base">
                             はじめる（新規登録）
                         </a>
                     @endif
+
                     <a href="{{ route('login') }}"
-                        class="w-full sm:w-auto px-8 py-4 bg-white hover:bg-sky-50/50 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow border border-gray-200 transition-all duration-200 text-center">
+                        class="w-full sm:w-1/2 px-4 py-4 bg-white hover:bg-sky-50/50 text-gray-700 font-medium rounded-xl shadow-sm hover:shadow border border-gray-200 transition-all duration-200 flex items-center justify-center text-center whitespace-nowrap text-sm sm:text-base">
                         アカウントをお持ちの方
                     </a>
                 @endauth
